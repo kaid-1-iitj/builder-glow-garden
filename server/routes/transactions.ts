@@ -4,6 +4,7 @@ import User from '../models/User';
 import AuthUtils, { AuthenticatedRequest } from '../utils/auth';
 import mongoose from 'mongoose';
 import MockDataService from '../services/mockData';
+import NotificationService from '../services/notificationService';
 
 // Get transactions based on user role and permissions
 export const getTransactions: RequestHandler = async (req: AuthenticatedRequest, res) => {
