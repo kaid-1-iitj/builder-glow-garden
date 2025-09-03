@@ -145,6 +145,10 @@ export default function Dashboard() {
                 <FileText className="h-4 w-4 mr-2" />
                 {user?.role === 'society_user' ? 'My Transactions' : 'Transactions'}
               </Button>
+              <Button variant="outline" onClick={() => window.location.href = '/reports'}>
+                <TrendingUp className="h-4 w-4 mr-2" />
+                Reports
+              </Button>
               <Button variant="outline">
                 <Settings className="h-4 w-4 mr-2" />
                 Settings
