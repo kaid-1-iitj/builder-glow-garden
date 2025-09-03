@@ -189,7 +189,7 @@ export default function Dashboard() {
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{currentStats.myTransactions}</div>
+                  <div className="text-2xl font-bold">{currentStats.myTransactions || 0}</div>
                   <p className="text-xs text-muted-foreground">Total submitted</p>
                 </CardContent>
               </Card>
@@ -200,7 +200,7 @@ export default function Dashboard() {
                   <Clock className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{currentStats.pendingTransactions}</div>
+                  <div className="text-2xl font-bold">{currentStats.pendingTransactions || 0}</div>
                   <p className="text-xs text-muted-foreground">Awaiting review</p>
                 </CardContent>
               </Card>
@@ -215,7 +215,7 @@ export default function Dashboard() {
                   <FileText className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{currentStats.assignedTransactions}</div>
+                  <div className="text-2xl font-bold">{currentStats.assignedTransactions || 0}</div>
                   <p className="text-xs text-muted-foreground">Total assigned</p>
                 </CardContent>
               </Card>
@@ -226,7 +226,7 @@ export default function Dashboard() {
                   <AlertCircle className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
-                  <div className="text-2xl font-bold">{currentStats.pendingReview}</div>
+                  <div className="text-2xl font-bold">{currentStats.pendingReview || 0}</div>
                   <p className="text-xs text-muted-foreground">Require action</p>
                 </CardContent>
               </Card>
@@ -240,9 +240,9 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {user.role === 'admin' && currentStats.totalTransactions - currentStats.pendingTransactions}
-                {user.role === 'society_user' && currentStats.completedTransactions}
-                {user.role === 'agent' && currentStats.completedToday}
+                {user.role === 'admin' && ((currentStats.totalTransactions || 0) - (currentStats.pendingTransactions || 0))}
+                {user.role === 'society_user' && (currentStats.completedTransactions || 0)}
+                {user.role === 'agent' && (currentStats.completedToday || 0)}
               </div>
               <p className="text-xs text-muted-foreground">
                 {user.role === 'agent' ? 'Today' : 'All time'}
@@ -257,7 +257,7 @@ export default function Dashboard() {
             </CardHeader>
             <CardContent>
               <div className="text-2xl font-bold">
-                {user.role === 'agent' ? currentStats.avgProcessingTime : '98%'}
+                {user.role === 'agent' ? (currentStats.avgProcessingTime || 'N/A') : '98%'}
               </div>
               <p className="text-xs text-muted-foreground">
                 {user.role === 'agent' ? 'Avg processing time' : 'Success rate'}
