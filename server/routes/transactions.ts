@@ -252,6 +252,20 @@ export const updateTransactionStatus: RequestHandler = async (req: Authenticated
       }
     }
 
+    // Send notification for status change
+    try {
+      const notificationService = NotificationService.getInstance();
+      await notificationService.sendTransactionUpdateNotification(
+        transaction,
+        req.user,
+        status,
+        remark
+      );
+    } catch (notificationError) {
+      console.error('Failed to send notification:', notificationError);
+      // Don't fail the transaction update if notification fails
+    }
+
     res.json({
       message: 'Transaction updated successfully',
       transaction
