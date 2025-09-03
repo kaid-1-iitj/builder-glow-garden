@@ -3,6 +3,7 @@ import User from '../models/User';
 import Society from '../models/Society';
 import AuthUtils, { AuthenticatedRequest } from '../utils/auth';
 import mongoose from 'mongoose';
+import MockDataService from '../services/mockData';
 
 export const login: RequestHandler = async (req, res) => {
   try {
