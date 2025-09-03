@@ -3,12 +3,13 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Building2, 
-  Users, 
-  FileText, 
-  Plus, 
-  Settings, 
+import { useState, useEffect } from "react";
+import {
+  Building2,
+  Users,
+  FileText,
+  Plus,
+  Settings,
   LogOut,
   Clock,
   CheckCircle,
