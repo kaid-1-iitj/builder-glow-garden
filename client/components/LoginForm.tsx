@@ -5,36 +5,22 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, Lock, AlertCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
 
-interface LoginFormProps {
-  onLogin?: (email: string, password: string) => Promise<void>;
-}
-
-export function LoginForm({ onLogin }: LoginFormProps) {
+export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
+  const { login, isLoading } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    setIsLoading(true);
 
     try {
-      if (onLogin) {
-        await onLogin(email, password);
-      } else {
-        // Placeholder implementation
-        console.log("Login attempt:", { email, password });
-        // Simulate API call
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        setError("Login functionality not yet implemented");
-      }
+      await login(email, password);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed");
-    } finally {
-      setIsLoading(false);
     }
   };
 
