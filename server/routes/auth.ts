@@ -152,9 +152,21 @@ export const getProfile: RequestHandler = async (req: AuthenticatedRequest, res)
       return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    const user = await User.findById(req.user._id)
-      .populate('societyId')
-      .select('-password');
+    const isMongoConnected = mongoose.connection.readyState === 1;
+    let user;
+
+    if (isMongoConnected) {
+      user = await User.findById(req.user._id)
+        .populate('societyId')
+        .select('-password');
+    } else {
+      user = await MockDataService.findUserById(req.user._id.toString());
+      if (user) {
+        // Remove password from response
+        const { password, ...userWithoutPassword } = user;
+        user = userWithoutPassword;
+      }
+    }
 
     res.json({ user });
   } catch (error) {
