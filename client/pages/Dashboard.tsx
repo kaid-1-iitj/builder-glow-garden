@@ -77,29 +77,7 @@ export default function Dashboard() {
     }
   };
 
-  // Mock data for demonstration
-  const dashboardStats = {
-    admin: {
-      totalSocieties: 15,
-      totalUsers: 89,
-      totalTransactions: 234,
-      pendingTransactions: 12
-    },
-    society_user: {
-      myTransactions: 23,
-      pendingTransactions: 5,
-      completedTransactions: 18,
-      pendingClarifications: 2
-    },
-    agent: {
-      assignedTransactions: 18,
-      pendingReview: 8,
-      completedToday: 3,
-      avgProcessingTime: '2.3 days'
-    }
-  };
-
-  const currentStats = dashboardStats[user.role as keyof typeof dashboardStats];
+  const currentStats = dashboardStats || {};
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/30">
