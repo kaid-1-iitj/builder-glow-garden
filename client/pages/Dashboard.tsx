@@ -129,9 +129,15 @@ export default function Dashboard() {
             </div>
             
             <div className="flex gap-2">
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                New Transaction
+              {user?.role === 'admin' && (
+                <Button onClick={() => window.location.href = '/admin/societies'}>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Manage Societies
+                </Button>
+              )}
+              <Button onClick={() => window.location.href = '/transactions'}>
+                <FileText className="h-4 w-4 mr-2" />
+                {user?.role === 'society_user' ? 'My Transactions' : 'Transactions'}
               </Button>
               <Button variant="outline">
                 <Settings className="h-4 w-4 mr-2" />
