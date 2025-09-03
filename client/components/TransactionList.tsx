@@ -1,20 +1,32 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { 
-  FileText, 
-  Eye, 
-  Clock, 
-  CheckCircle, 
-  AlertCircle, 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  FileText,
+  Eye,
+  Clock,
+  CheckCircle,
+  AlertCircle,
   User,
   Building2,
   Search,
-  Filter
+  Filter,
 } from "lucide-react";
 
 interface Transaction {
@@ -22,7 +34,11 @@ interface Transaction {
   vendorName: string;
   nature: string;
   amount?: number;
-  status: 'pending_on_society' | 'pending_on_agent' | 'pending_for_clarification' | 'completed';
+  status:
+    | "pending_on_society"
+    | "pending_on_agent"
+    | "pending_for_clarification"
+    | "completed";
   createdBy: string;
   societyId: string;
   assignedToAgent?: string;
@@ -37,33 +53,36 @@ interface TransactionListProps {
 }
 
 const statusConfig = {
-  'pending_on_society': {
-    label: 'Pending on Society',
-    variant: 'secondary' as const,
+  pending_on_society: {
+    label: "Pending on Society",
+    variant: "secondary" as const,
     icon: Clock,
-    color: 'text-yellow-600'
+    color: "text-yellow-600",
   },
-  'pending_on_agent': {
-    label: 'Pending on Agent',
-    variant: 'default' as const,
+  pending_on_agent: {
+    label: "Pending on Agent",
+    variant: "default" as const,
     icon: User,
-    color: 'text-blue-600'
+    color: "text-blue-600",
   },
-  'pending_for_clarification': {
-    label: 'Needs Clarification',
-    variant: 'destructive' as const,
+  pending_for_clarification: {
+    label: "Needs Clarification",
+    variant: "destructive" as const,
     icon: AlertCircle,
-    color: 'text-orange-600'
+    color: "text-orange-600",
   },
-  'completed': {
-    label: 'Completed',
-    variant: 'outline' as const,
+  completed: {
+    label: "Completed",
+    variant: "outline" as const,
     icon: CheckCircle,
-    color: 'text-green-600'
-  }
+    color: "text-green-600",
+  },
 };
 
-export function TransactionList({ onViewTransaction, onCreateNew }: TransactionListProps) {
+export function TransactionList({
+  onViewTransaction,
+  onCreateNew,
+}: TransactionListProps) {
   const { user, token } = useAuth();
   const [transactions, setTransactions] = useState<Transaction[]>([]);
   const [loading, setLoading] = useState(true);
@@ -83,17 +102,17 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
       setLoading(true);
       const params = new URLSearchParams({
         page: page.toString(),
-        limit: '10'
+        limit: "10",
       });
 
-      if (statusFilter !== 'all') {
-        params.append('status', statusFilter);
+      if (statusFilter !== "all") {
+        params.append("status", statusFilter);
       }
 
       const response = await fetch(`/api/transactions?${params}`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -102,31 +121,32 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
         setTotalPages(data.pagination?.totalPages || 1);
       }
     } catch (error) {
-      console.error('Failed to fetch transactions:', error);
+      console.error("Failed to fetch transactions:", error);
     } finally {
       setLoading(false);
     }
   };
 
-  const filteredTransactions = transactions.filter(transaction =>
-    transaction.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    transaction.nature.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredTransactions = transactions.filter(
+    (transaction) =>
+      transaction.vendorName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      transaction.nature.toLowerCase().includes(searchTerm.toLowerCase()),
   );
 
   const formatCurrency = (amount?: number) => {
-    if (!amount) return 'N/A';
-    return new Intl.NumberFormat('en-IN', {
-      style: 'currency',
-      currency: 'INR',
-      maximumFractionDigits: 0
+    if (!amount) return "N/A";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 0,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-IN', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-IN", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -155,13 +175,15 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
         <div>
           <h2 className="text-2xl font-bold">Transactions</h2>
           <p className="text-muted-foreground">
-            {user?.role === 'admin' ? 'All transactions across societies' :
-             user?.role === 'society_user' ? 'Your society transactions' :
-             'Assigned transactions'}
+            {user?.role === "admin"
+              ? "All transactions across societies"
+              : user?.role === "society_user"
+                ? "Your society transactions"
+                : "Assigned transactions"}
           </p>
         </div>
-        
-        {user?.role === 'society_user' && user?.permissions.canWrite && (
+
+        {user?.role === "society_user" && user?.permissions.canWrite && (
           <Button onClick={onCreateNew}>
             <FileText className="h-4 w-4 mr-2" />
             New Transaction
@@ -180,7 +202,7 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
             className="pl-10"
           />
         </div>
-        
+
         <Select value={statusFilter} onValueChange={setStatusFilter}>
           <SelectTrigger className="w-full sm:w-[200px]">
             <Filter className="h-4 w-4 mr-2" />
@@ -188,9 +210,13 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="pending_on_society">Pending on Society</SelectItem>
+            <SelectItem value="pending_on_society">
+              Pending on Society
+            </SelectItem>
             <SelectItem value="pending_on_agent">Pending on Agent</SelectItem>
-            <SelectItem value="pending_for_clarification">Needs Clarification</SelectItem>
+            <SelectItem value="pending_for_clarification">
+              Needs Clarification
+            </SelectItem>
             <SelectItem value="completed">Completed</SelectItem>
           </SelectContent>
         </Select>
@@ -202,11 +228,15 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
           <Card>
             <CardContent className="py-8 text-center">
               <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <h3 className="text-lg font-medium mb-2">No transactions found</h3>
+              <h3 className="text-lg font-medium mb-2">
+                No transactions found
+              </h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm ? 'Try adjusting your search terms' : 'Get started by creating your first transaction'}
+                {searchTerm
+                  ? "Try adjusting your search terms"
+                  : "Get started by creating your first transaction"}
               </p>
-              {user?.role === 'society_user' && user?.permissions.canWrite && (
+              {user?.role === "society_user" && user?.permissions.canWrite && (
                 <Button onClick={onCreateNew}>
                   <FileText className="h-4 w-4 mr-2" />
                   Create Transaction
@@ -220,11 +250,16 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
             const StatusIcon = statusInfo.icon;
 
             return (
-              <Card key={transaction._id} className="hover:shadow-md transition-shadow">
+              <Card
+                key={transaction._id}
+                className="hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="flex items-start justify-between">
                     <div className="space-y-1">
-                      <CardTitle className="text-lg">{transaction.vendorName}</CardTitle>
+                      <CardTitle className="text-lg">
+                        {transaction.vendorName}
+                      </CardTitle>
                       <CardDescription className="flex items-center gap-2">
                         <Building2 className="h-3 w-3" />
                         {transaction.nature}
@@ -236,30 +271,38 @@ export function TransactionList({ onViewTransaction, onCreateNew }: TransactionL
                     </Badge>
                   </div>
                 </CardHeader>
-                
+
                 <CardContent>
                   <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-4">
                     <div>
                       <p className="text-xs text-muted-foreground">Amount</p>
-                      <p className="font-medium">{formatCurrency(transaction.amount)}</p>
+                      <p className="font-medium">
+                        {formatCurrency(transaction.amount)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Created</p>
-                      <p className="font-medium">{formatDate(transaction.createdAt)}</p>
+                      <p className="font-medium">
+                        {formatDate(transaction.createdAt)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">Updated</p>
-                      <p className="font-medium">{formatDate(transaction.updatedAt)}</p>
+                      <p className="font-medium">
+                        {formatDate(transaction.updatedAt)}
+                      </p>
                     </div>
                     <div>
                       <p className="text-xs text-muted-foreground">ID</p>
-                      <p className="font-medium text-xs font-mono">#{transaction._id.slice(-6)}</p>
+                      <p className="font-medium text-xs font-mono">
+                        #{transaction._id.slice(-6)}
+                      </p>
                     </div>
                   </div>
-                  
+
                   <div className="flex justify-end">
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={() => onViewTransaction?.(transaction)}
                     >

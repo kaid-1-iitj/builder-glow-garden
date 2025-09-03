@@ -1,11 +1,11 @@
-import { ITransaction } from '../models/Transaction';
-import { IUser } from '../models/User';
+import { ITransaction } from "../models/Transaction";
+import { IUser } from "../models/User";
 
 export interface NotificationData {
   to: string;
   subject: string;
   body: string;
-  type: 'transaction_update' | 'user_creation' | 'society_creation';
+  type: "transaction_update" | "user_creation" | "society_creation";
 }
 
 export class NotificationService {
@@ -25,14 +25,14 @@ export class NotificationService {
     transaction: Partial<ITransaction>,
     updatedBy: Partial<IUser>,
     newStatus: string,
-    remark?: string
+    remark?: string,
   ): Promise<void> {
     try {
       const statusMessages = {
-        'pending_on_society': 'is now pending on society for action',
-        'pending_on_agent': 'has been assigned to an agent for review',
-        'pending_for_clarification': 'requires clarification from the society',
-        'completed': 'has been completed successfully'
+        pending_on_society: "is now pending on society for action",
+        pending_on_agent: "has been assigned to an agent for review",
+        pending_for_clarification: "requires clarification from the society",
+        completed: "has been completed successfully",
       };
 
       const notification: NotificationData = {
@@ -46,23 +46,25 @@ export class NotificationService {
           Transaction Details:
           - Vendor: ${transaction.vendorName}
           - Nature: ${transaction.nature}
-          - Status: ${newStatus.replace(/_/g, ' ').toUpperCase()}
-          ${transaction.amount ? `- Amount: ₹${transaction.amount}` : ''}
+          - Status: ${newStatus.replace(/_/g, " ").toUpperCase()}
+          ${transaction.amount ? `- Amount: ₹${transaction.amount}` : ""}
           
-          ${remark ? `Remark from ${updatedBy.name}: ${remark}` : ''}
+          ${remark ? `Remark from ${updatedBy.name}: ${remark}` : ""}
           
           You can view the full details by logging into your SocietyHub account.
           
           Best regards,
           SocietyHub Team
         `,
-        type: 'transaction_update'
+        type: "transaction_update",
       };
 
       await this.sendEmail(notification);
-      console.log(`Notification sent for transaction ${transaction._id} status update`);
+      console.log(
+        `Notification sent for transaction ${transaction._id} status update`,
+      );
     } catch (error) {
-      console.error('Failed to send transaction update notification:', error);
+      console.error("Failed to send transaction update notification:", error);
     }
   }
 
@@ -72,12 +74,12 @@ export class NotificationService {
   public async sendUserCreationNotification(
     user: Partial<IUser>,
     temporaryPassword: string,
-    societyName: string
+    societyName: string,
   ): Promise<void> {
     try {
       const notification: NotificationData = {
         to: user.email as string,
-        subject: 'Welcome to SocietyHub - Account Created',
+        subject: "Welcome to SocietyHub - Account Created",
         body: `
           Dear ${user.name},
           
@@ -87,7 +89,7 @@ export class NotificationService {
           - Email: ${user.email}
           - Temporary Password: ${temporaryPassword}
           - Society: ${societyName}
-          - Role: ${user.role === 'society_user' ? 'Society User' : 'Processing Agent'}
+          - Role: ${user.role === "society_user" ? "Society User" : "Processing Agent"}
           
           Please log in to your account and change your password immediately.
           
@@ -98,13 +100,13 @@ export class NotificationService {
           Best regards,
           SocietyHub Team
         `,
-        type: 'user_creation'
+        type: "user_creation",
       };
 
       await this.sendEmail(notification);
       console.log(`User creation notification sent to ${user.email}`);
     } catch (error) {
-      console.error('Failed to send user creation notification:', error);
+      console.error("Failed to send user creation notification:", error);
     }
   }
 
@@ -113,12 +115,12 @@ export class NotificationService {
    */
   public async sendSocietyCreationNotification(
     societyName: string,
-    adminEmail: string
+    adminEmail: string,
   ): Promise<void> {
     try {
       const notification: NotificationData = {
         to: adminEmail,
-        subject: 'New Society Created - SocietyHub',
+        subject: "New Society Created - SocietyHub",
         body: `
           Dear Administrator,
           
@@ -137,13 +139,13 @@ export class NotificationService {
           Best regards,
           SocietyHub Team
         `,
-        type: 'society_creation'
+        type: "society_creation",
       };
 
       await this.sendEmail(notification);
       console.log(`Society creation notification sent for ${societyName}`);
     } catch (error) {
-      console.error('Failed to send society creation notification:', error);
+      console.error("Failed to send society creation notification:", error);
     }
   }
 
@@ -153,16 +155,16 @@ export class NotificationService {
    */
   private async sendEmail(notification: NotificationData): Promise<void> {
     // Mock implementation - in production, replace with actual email service
-    console.log('📧 EMAIL NOTIFICATION:');
+    console.log("📧 EMAIL NOTIFICATION:");
     console.log(`To: ${notification.to}`);
     console.log(`Subject: ${notification.subject}`);
     console.log(`Type: ${notification.type}`);
-    console.log('---');
+    console.log("---");
     console.log(notification.body);
-    console.log('---\n');
+    console.log("---\n");
 
     // Simulate network delay
-    await new Promise(resolve => setTimeout(resolve, 100));
+    await new Promise((resolve) => setTimeout(resolve, 100));
 
     // In production, you would do something like:
     /*
@@ -181,17 +183,21 @@ export class NotificationService {
    */
   private formatEmailHTML(textBody: string): string {
     return textBody
-      .replace(/\n\n/g, '</p><p>')
-      .replace(/\n/g, '<br>')
-      .replace(/^/, '<p>')
-      .replace(/$/, '</p>');
+      .replace(/\n\n/g, "</p><p>")
+      .replace(/\n/g, "<br>")
+      .replace(/^/, "<p>")
+      .replace(/$/, "</p>");
   }
 
   /**
    * Send bulk notifications (for future enhancement)
    */
-  public async sendBulkNotifications(notifications: NotificationData[]): Promise<void> {
-    const promises = notifications.map(notification => this.sendEmail(notification));
+  public async sendBulkNotifications(
+    notifications: NotificationData[],
+  ): Promise<void> {
+    const promises = notifications.map((notification) =>
+      this.sendEmail(notification),
+    );
     await Promise.allSettled(promises);
   }
 
@@ -205,7 +211,7 @@ export class NotificationService {
       sms: false,
       push: true,
       transactionUpdates: true,
-      systemAlerts: true
+      systemAlerts: true,
     };
   }
 }

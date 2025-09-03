@@ -1,18 +1,24 @@
 import { LoginForm } from "@/components/LoginForm";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  Building2, 
-  Users, 
-  FileText, 
-  Shield, 
-  CheckCircle, 
-  Clock, 
-  TrendingUp, 
+import {
+  Building2,
+  Users,
+  FileText,
+  Shield,
+  CheckCircle,
+  Clock,
+  TrendingUp,
   Bell,
   ArrowRight,
-  Star
+  Star,
 } from "lucide-react";
 
 export default function Index() {
@@ -20,40 +26,60 @@ export default function Index() {
     {
       icon: Users,
       title: "Multi-Role Management",
-      description: "Admins, Society Users, and Agents with tailored permissions and workflows."
+      description:
+        "Admins, Society Users, and Agents with tailored permissions and workflows.",
     },
     {
       icon: FileText,
       title: "Transaction Tracking",
-      description: "Complete lifecycle management with status updates and audit trails."
+      description:
+        "Complete lifecycle management with status updates and audit trails.",
     },
     {
       icon: Shield,
       title: "Secure Authentication",
-      description: "JWT-based security with role-based access control."
+      description: "JWT-based security with role-based access control.",
     },
     {
       icon: Bell,
       title: "Smart Notifications",
-      description: "Automated email alerts for status changes and important updates."
+      description:
+        "Automated email alerts for status changes and important updates.",
     },
     {
       icon: TrendingUp,
       title: "Comprehensive Reporting",
-      description: "Generate detailed reports by status, date range, and society."
+      description:
+        "Generate detailed reports by status, date range, and society.",
     },
     {
       icon: CheckCircle,
       title: "Workflow Management",
-      description: "Clear status progression from pending to completion."
-    }
+      description: "Clear status progression from pending to completion.",
+    },
   ];
 
   const workflowSteps = [
-    { step: "1", title: "Society Creates Transaction", description: "Submit vendor details, nature, and attachments" },
-    { step: "2", title: "Agent Review", description: "Assigned agent reviews and processes" },
-    { step: "3", title: "Clarification (if needed)", description: "Request additional information" },
-    { step: "4", title: "Completion", description: "Transaction finalized and recorded" }
+    {
+      step: "1",
+      title: "Society Creates Transaction",
+      description: "Submit vendor details, nature, and attachments",
+    },
+    {
+      step: "2",
+      title: "Agent Review",
+      description: "Assigned agent reviews and processes",
+    },
+    {
+      step: "3",
+      title: "Clarification (if needed)",
+      description: "Request additional information",
+    },
+    {
+      step: "4",
+      title: "Completion",
+      description: "Transaction finalized and recorded",
+    },
   ];
 
   return (
@@ -67,7 +93,9 @@ export default function Index() {
             </div>
             <div>
               <h1 className="text-xl font-bold">SocietyHub</h1>
-              <p className="text-xs text-muted-foreground">Management Platform</p>
+              <p className="text-xs text-muted-foreground">
+                Management Platform
+              </p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
@@ -97,11 +125,12 @@ export default function Index() {
                 Platform
               </h1>
               <p className="text-xl text-muted-foreground leading-relaxed">
-                Streamline your society operations with role-based access, transaction tracking, 
-                automated workflows, and comprehensive reporting. Built for transparency and efficiency.
+                Streamline your society operations with role-based access,
+                transaction tracking, automated workflows, and comprehensive
+                reporting. Built for transparency and efficiency.
               </p>
             </div>
-            
+
             <div className="flex flex-wrap gap-4">
               <Button size="lg" className="px-8">
                 Get Started
@@ -145,14 +174,18 @@ export default function Index() {
               Everything you need to manage your society
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              From user management to transaction tracking, our platform provides all the tools 
-              your society needs to operate efficiently and transparently.
+              From user management to transaction tracking, our platform
+              provides all the tools your society needs to operate efficiently
+              and transparently.
             </p>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <Card key={index} className="border-0 shadow-sm hover:shadow-md transition-shadow">
+              <Card
+                key={index}
+                className="border-0 shadow-sm hover:shadow-md transition-shadow"
+              >
                 <CardHeader>
                   <div className="bg-primary/10 rounded-lg p-2 w-fit">
                     <feature.icon className="h-6 w-6 text-primary" />
@@ -160,7 +193,9 @@ export default function Index() {
                   <CardTitle className="text-xl">{feature.title}</CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <CardDescription className="text-base">{feature.description}</CardDescription>
+                  <CardDescription className="text-base">
+                    {feature.description}
+                  </CardDescription>
                 </CardContent>
               </Card>
             ))}
@@ -179,8 +214,8 @@ export default function Index() {
               Streamlined Transaction Workflow
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Our system guides every transaction through a clear, auditable process 
-              from creation to completion.
+              Our system guides every transaction through a clear, auditable
+              process from creation to completion.
             </p>
           </div>
 
@@ -214,14 +249,17 @@ export default function Index() {
                 </div>
                 <div>
                   <h3 className="font-bold">SocietyHub</h3>
-                  <p className="text-sm text-muted-foreground">Management Platform</p>
+                  <p className="text-sm text-muted-foreground">
+                    Management Platform
+                  </p>
                 </div>
               </div>
               <p className="text-muted-foreground">
-                Empowering societies with modern management tools and transparent workflows.
+                Empowering societies with modern management tools and
+                transparent workflows.
               </p>
             </div>
-            
+
             <div className="space-y-4">
               <h4 className="font-semibold">Features</h4>
               <div className="space-y-2 text-sm text-muted-foreground">
@@ -242,9 +280,11 @@ export default function Index() {
               </div>
             </div>
           </div>
-          
+
           <div className="border-t mt-8 pt-8 text-center text-sm text-muted-foreground">
-            <p>&copy; 2024 SocietyHub. Built for transparent society management.</p>
+            <p>
+              &copy; 2024 SocietyHub. Built for transparent society management.
+            </p>
           </div>
         </div>
       </footer>

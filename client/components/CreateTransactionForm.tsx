@@ -4,17 +4,23 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { 
-  FileText, 
-  Building2, 
-  DollarSign, 
+import {
+  FileText,
+  Building2,
+  DollarSign,
   MessageSquare,
   AlertCircle,
   CheckCircle,
-  Upload
+  Upload,
 } from "lucide-react";
 
 interface CreateTransactionFormProps {
@@ -22,79 +28,83 @@ interface CreateTransactionFormProps {
   onCancel?: () => void;
 }
 
-export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransactionFormProps) {
+export function CreateTransactionForm({
+  onSuccess,
+  onCancel,
+}: CreateTransactionFormProps) {
   const { user, token } = useAuth();
   const [formData, setFormData] = useState({
-    vendorName: '',
-    nature: '',
-    amount: '',
-    remarks: ''
+    vendorName: "",
+    nature: "",
+    amount: "",
+    remarks: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
-    setError('');
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.vendorName.trim() || !formData.nature.trim()) {
-      setError('Vendor name and nature of transaction are required');
+      setError("Vendor name and nature of transaction are required");
       return;
     }
 
     if (!token) {
-      setError('Authentication required');
+      setError("Authentication required");
       return;
     }
 
     setIsSubmitting(true);
-    setError('');
+    setError("");
 
     try {
       const submitData = {
         vendorName: formData.vendorName.trim(),
         nature: formData.nature.trim(),
         amount: formData.amount ? parseFloat(formData.amount) : undefined,
-        remarks: formData.remarks.trim() || undefined
+        remarks: formData.remarks.trim() || undefined,
       };
 
-      const response = await fetch('/api/transactions', {
-        method: 'POST',
+      const response = await fetch("/api/transactions", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(submitData)
+        body: JSON.stringify(submitData),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create transaction');
+        throw new Error(data.error || "Failed to create transaction");
       }
 
       setSuccess(true);
-      
+
       // Reset form
       setFormData({
-        vendorName: '',
-        nature: '',
-        amount: '',
-        remarks: ''
+        vendorName: "",
+        nature: "",
+        amount: "",
+        remarks: "",
       });
 
       // Call success callback after a brief delay
       setTimeout(() => {
         onSuccess?.(data.transaction);
       }, 1500);
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create transaction');
+      setError(
+        err instanceof Error ? err.message : "Failed to create transaction",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -107,15 +117,19 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
           <div className="bg-green-100 rounded-full p-3 w-fit mx-auto mb-4">
             <CheckCircle className="h-8 w-8 text-green-600" />
           </div>
-          <h3 className="text-lg font-semibold mb-2">Transaction Created Successfully!</h3>
+          <h3 className="text-lg font-semibold mb-2">
+            Transaction Created Successfully!
+          </h3>
           <p className="text-muted-foreground mb-4">
             Your transaction has been submitted and is now pending review.
           </p>
           <div className="flex gap-2 justify-center">
-            <Button onClick={() => {
-              setSuccess(false);
-              onSuccess?.(null);
-            }}>
+            <Button
+              onClick={() => {
+                setSuccess(false);
+                onSuccess?.(null);
+              }}
+            >
               Create Another
             </Button>
             <Button variant="outline" onClick={onCancel}>
@@ -135,7 +149,7 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
         <p className="text-muted-foreground">
           Submit a new transaction for processing by your society
         </p>
-        
+
         {user?.societyId && (
           <Badge variant="outline" className="w-fit">
             <Building2 className="h-3 w-3 mr-1" />
@@ -155,7 +169,7 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
             Provide the details of the transaction you want to submit
           </CardDescription>
         </CardHeader>
-        
+
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {error && (
@@ -173,7 +187,9 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
                   id="vendorName"
                   placeholder="e.g., ABC Maintenance Services"
                   value={formData.vendorName}
-                  onChange={(e) => handleInputChange('vendorName', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("vendorName", e.target.value)
+                  }
                   required
                 />
               </div>
@@ -190,7 +206,9 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
                     min="0"
                     placeholder="0.00"
                     value={formData.amount}
-                    onChange={(e) => handleInputChange('amount', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("amount", e.target.value)
+                    }
                     className="pl-10"
                   />
                 </div>
@@ -204,7 +222,7 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
                 id="nature"
                 placeholder="e.g., Monthly maintenance, Security services, Electrical repairs"
                 value={formData.nature}
-                onChange={(e) => handleInputChange('nature', e.target.value)}
+                onChange={(e) => handleInputChange("nature", e.target.value)}
                 required
               />
             </div>
@@ -216,7 +234,7 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
                 id="remarks"
                 placeholder="Provide any additional details about this transaction..."
                 value={formData.remarks}
-                onChange={(e) => handleInputChange('remarks', e.target.value)}
+                onChange={(e) => handleInputChange("remarks", e.target.value)}
                 rows={4}
               />
             </div>
@@ -239,15 +257,16 @@ export function CreateTransactionForm({ onSuccess, onCancel }: CreateTransaction
             <Alert>
               <MessageSquare className="h-4 w-4" />
               <AlertDescription>
-                <strong>What happens next:</strong> Your transaction will be submitted with status "Pending on Society" 
-                and will then be assigned to an agent for review and processing.
+                <strong>What happens next:</strong> Your transaction will be
+                submitted with status "Pending on Society" and will then be
+                assigned to an agent for review and processing.
               </AlertDescription>
             </Alert>
 
             {/* Submit Buttons */}
             <div className="flex gap-3 pt-4">
               <Button type="submit" disabled={isSubmitting} className="flex-1">
-                {isSubmitting ? 'Creating...' : 'Create Transaction'}
+                {isSubmitting ? "Creating..." : "Create Transaction"}
               </Button>
               <Button type="button" variant="outline" onClick={onCancel}>
                 Cancel

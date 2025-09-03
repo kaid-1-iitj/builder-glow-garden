@@ -4,16 +4,28 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Building2, 
-  Users, 
-  Plus, 
+import {
+  Building2,
+  Users,
+  Plus,
   LogOut,
   CheckCircle,
   AlertCircle,
@@ -21,7 +33,7 @@ import {
   Mail,
   Phone,
   Globe,
-  UserPlus
+  UserPlus,
 } from "lucide-react";
 
 interface Society {
@@ -40,37 +52,37 @@ interface Society {
 export default function SocietyOnboarding() {
   const { user, logout, token } = useAuth();
   const [activeTab, setActiveTab] = useState("create-society");
-  
+
   // Society form state
   const [societyForm, setSocietyForm] = useState({
-    name: '',
-    street: '',
-    city: '',
-    state: '',
-    zipCode: '',
-    country: 'India',
-    registrationNumber: '',
-    phone: '',
-    email: '',
-    website: ''
+    name: "",
+    street: "",
+    city: "",
+    state: "",
+    zipCode: "",
+    country: "India",
+    registrationNumber: "",
+    phone: "",
+    email: "",
+    website: "",
   });
-  
+
   // User form state
   const [userForm, setUserForm] = useState({
-    name: '',
-    email: '',
-    role: 'society_user',
-    societyId: '',
-    canWrite: true
+    name: "",
+    email: "",
+    role: "society_user",
+    societyId: "",
+    canWrite: true,
   });
 
   const [societies, setSocieties] = useState<Society[]>([]);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [error, setError] = useState('');
-  const [success, setSuccess] = useState('');
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   // Check if user is admin
-  if (!user || user.role !== 'admin') {
+  if (!user || user.role !== "admin") {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Card className="max-w-md">
@@ -89,15 +101,15 @@ export default function SocietyOnboarding() {
   const handleSocietySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch('/api/societies', {
-        method: 'POST',
+      const response = await fetch("/api/societies", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: societyForm.name,
@@ -106,44 +118,43 @@ export default function SocietyOnboarding() {
             city: societyForm.city,
             state: societyForm.state,
             zipCode: societyForm.zipCode,
-            country: societyForm.country
+            country: societyForm.country,
           },
           registrationNumber: societyForm.registrationNumber || undefined,
           contactInfo: {
             phone: societyForm.phone || undefined,
             email: societyForm.email || undefined,
-            website: societyForm.website || undefined
-          }
-        })
+            website: societyForm.website || undefined,
+          },
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create society');
+        throw new Error(data.error || "Failed to create society");
       }
 
-      setSuccess('Society created successfully!');
-      
+      setSuccess("Society created successfully!");
+
       // Reset form
       setSocietyForm({
-        name: '',
-        street: '',
-        city: '',
-        state: '',
-        zipCode: '',
-        country: 'India',
-        registrationNumber: '',
-        phone: '',
-        email: '',
-        website: ''
+        name: "",
+        street: "",
+        city: "",
+        state: "",
+        zipCode: "",
+        country: "India",
+        registrationNumber: "",
+        phone: "",
+        email: "",
+        website: "",
       });
 
       // Add to societies list for user creation
-      setSocieties(prev => [...prev, data.society]);
-
+      setSocieties((prev) => [...prev, data.society]);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create society');
+      setError(err instanceof Error ? err.message : "Failed to create society");
     } finally {
       setIsSubmitting(false);
     }
@@ -152,15 +163,15 @@ export default function SocietyOnboarding() {
   const handleUserSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setError('');
-    setSuccess('');
+    setError("");
+    setSuccess("");
 
     try {
-      const response = await fetch('/api/societies/users', {
-        method: 'POST',
+      const response = await fetch("/api/societies/users", {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           name: userForm.name,
@@ -169,30 +180,31 @@ export default function SocietyOnboarding() {
           societyId: userForm.societyId,
           permissions: {
             canRead: true,
-            canWrite: userForm.canWrite
-          }
-        })
+            canWrite: userForm.canWrite,
+          },
+        }),
       });
 
       const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.error || 'Failed to create user');
+        throw new Error(data.error || "Failed to create user");
       }
 
-      setSuccess(`User created successfully! Temporary password: ${data.temporaryPassword}`);
-      
+      setSuccess(
+        `User created successfully! Temporary password: ${data.temporaryPassword}`,
+      );
+
       // Reset form
       setUserForm({
-        name: '',
-        email: '',
-        role: 'society_user',
-        societyId: '',
-        canWrite: true
+        name: "",
+        email: "",
+        role: "society_user",
+        societyId: "",
+        canWrite: true,
       });
-
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to create user');
+      setError(err instanceof Error ? err.message : "Failed to create user");
     } finally {
       setIsSubmitting(false);
     }
@@ -200,10 +212,10 @@ export default function SocietyOnboarding() {
 
   const loadSocieties = async () => {
     try {
-      const response = await fetch('/api/societies', {
+      const response = await fetch("/api/societies", {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          Authorization: `Bearer ${token}`,
+        },
       });
 
       if (response.ok) {
@@ -211,17 +223,17 @@ export default function SocietyOnboarding() {
         setSocieties(data.societies);
       }
     } catch (error) {
-      console.error('Failed to load societies:', error);
+      console.error("Failed to load societies:", error);
     }
   };
 
   // Load societies when switching to user creation tab
   const handleTabChange = (value: string) => {
     setActiveTab(value);
-    setError('');
-    setSuccess('');
-    
-    if (value === 'create-user') {
+    setError("");
+    setSuccess("");
+
+    if (value === "create-user") {
       loadSocieties();
     }
   };
@@ -240,17 +252,23 @@ export default function SocietyOnboarding() {
               <p className="text-xs text-muted-foreground">Admin Panel</p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <Avatar>
                 <AvatarFallback>
-                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden sm:block">
                 <p className="text-sm font-medium">{user.name}</p>
-                <Badge variant="default" className="text-xs">Administrator</Badge>
+                <Badge variant="default" className="text-xs">
+                  Administrator
+                </Badge>
               </div>
             </div>
             <Button variant="outline" size="sm" onClick={logout}>
@@ -273,13 +291,23 @@ export default function SocietyOnboarding() {
           </div>
 
           {/* Tabs */}
-          <Tabs value={activeTab} onValueChange={handleTabChange} className="space-y-6">
+          <Tabs
+            value={activeTab}
+            onValueChange={handleTabChange}
+            className="space-y-6"
+          >
             <TabsList className="grid w-full grid-cols-2">
-              <TabsTrigger value="create-society" className="flex items-center gap-2">
+              <TabsTrigger
+                value="create-society"
+                className="flex items-center gap-2"
+              >
                 <Building2 className="h-4 w-4" />
                 Create Society
               </TabsTrigger>
-              <TabsTrigger value="create-user" className="flex items-center gap-2">
+              <TabsTrigger
+                value="create-user"
+                className="flex items-center gap-2"
+              >
                 <UserPlus className="h-4 w-4" />
                 Create User
               </TabsTrigger>
@@ -297,7 +325,7 @@ export default function SocietyOnboarding() {
                     Add a new society to the platform with all required details
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent>
                   <form onSubmit={handleSocietySubmit} className="space-y-6">
                     {error && (
@@ -306,7 +334,7 @@ export default function SocietyOnboarding() {
                         <AlertDescription>{error}</AlertDescription>
                       </Alert>
                     )}
-                    
+
                     {success && (
                       <Alert>
                         <CheckCircle className="h-4 w-4" />
@@ -316,8 +344,10 @@ export default function SocietyOnboarding() {
 
                     {/* Basic Information */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Basic Information</h3>
-                      
+                      <h3 className="text-lg font-semibold">
+                        Basic Information
+                      </h3>
+
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="societyName">Society Name *</Label>
@@ -325,18 +355,30 @@ export default function SocietyOnboarding() {
                             id="societyName"
                             placeholder="e.g., Green Valley Residents Association"
                             value={societyForm.name}
-                            onChange={(e) => setSocietyForm(prev => ({ ...prev, name: e.target.value }))}
+                            onChange={(e) =>
+                              setSocietyForm((prev) => ({
+                                ...prev,
+                                name: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
-                        
+
                         <div className="space-y-2">
-                          <Label htmlFor="registrationNumber">Registration Number</Label>
+                          <Label htmlFor="registrationNumber">
+                            Registration Number
+                          </Label>
                           <Input
                             id="registrationNumber"
                             placeholder="e.g., REG001"
                             value={societyForm.registrationNumber}
-                            onChange={(e) => setSocietyForm(prev => ({ ...prev, registrationNumber: e.target.value }))}
+                            onChange={(e) =>
+                              setSocietyForm((prev) => ({
+                                ...prev,
+                                registrationNumber: e.target.value,
+                              }))
+                            }
                           />
                         </div>
                       </div>
@@ -348,7 +390,7 @@ export default function SocietyOnboarding() {
                         <MapPin className="h-4 w-4" />
                         Address
                       </h3>
-                      
+
                       <div className="space-y-4">
                         <div className="space-y-2">
                           <Label htmlFor="street">Street Address *</Label>
@@ -356,11 +398,16 @@ export default function SocietyOnboarding() {
                             id="street"
                             placeholder="Building number, street name"
                             value={societyForm.street}
-                            onChange={(e) => setSocietyForm(prev => ({ ...prev, street: e.target.value }))}
+                            onChange={(e) =>
+                              setSocietyForm((prev) => ({
+                                ...prev,
+                                street: e.target.value,
+                              }))
+                            }
                             required
                           />
                         </div>
-                        
+
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div className="space-y-2">
                             <Label htmlFor="city">City *</Label>
@@ -368,29 +415,44 @@ export default function SocietyOnboarding() {
                               id="city"
                               placeholder="e.g., Mumbai"
                               value={societyForm.city}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, city: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  city: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
-                          
+
                           <div className="space-y-2">
                             <Label htmlFor="state">State *</Label>
                             <Input
                               id="state"
                               placeholder="e.g., Maharashtra"
                               value={societyForm.state}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, state: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  state: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
-                          
+
                           <div className="space-y-2">
                             <Label htmlFor="zipCode">ZIP Code *</Label>
                             <Input
                               id="zipCode"
                               placeholder="e.g., 400001"
                               value={societyForm.zipCode}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, zipCode: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  zipCode: e.target.value,
+                                }))
+                              }
                               required
                             />
                           </div>
@@ -400,8 +462,10 @@ export default function SocietyOnboarding() {
 
                     {/* Contact Information */}
                     <div className="space-y-4">
-                      <h3 className="text-lg font-semibold">Contact Information</h3>
-                      
+                      <h3 className="text-lg font-semibold">
+                        Contact Information
+                      </h3>
+
                       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                         <div className="space-y-2">
                           <Label htmlFor="phone">Phone</Label>
@@ -411,12 +475,17 @@ export default function SocietyOnboarding() {
                               id="phone"
                               placeholder="+91-9876543210"
                               value={societyForm.phone}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, phone: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  phone: e.target.value,
+                                }))
+                              }
                               className="pl-10"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="societyEmail">Email</Label>
                           <div className="relative">
@@ -426,12 +495,17 @@ export default function SocietyOnboarding() {
                               type="email"
                               placeholder="contact@society.org"
                               value={societyForm.email}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, email: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  email: e.target.value,
+                                }))
+                              }
                               className="pl-10"
                             />
                           </div>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label htmlFor="website">Website</Label>
                           <div className="relative">
@@ -440,7 +514,12 @@ export default function SocietyOnboarding() {
                               id="website"
                               placeholder="www.society.org"
                               value={societyForm.website}
-                              onChange={(e) => setSocietyForm(prev => ({ ...prev, website: e.target.value }))}
+                              onChange={(e) =>
+                                setSocietyForm((prev) => ({
+                                  ...prev,
+                                  website: e.target.value,
+                                }))
+                              }
                               className="pl-10"
                             />
                           </div>
@@ -448,8 +527,12 @@ export default function SocietyOnboarding() {
                       </div>
                     </div>
 
-                    <Button type="submit" disabled={isSubmitting} className="w-full">
-                      {isSubmitting ? 'Creating Society...' : 'Create Society'}
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting}
+                      className="w-full"
+                    >
+                      {isSubmitting ? "Creating Society..." : "Create Society"}
                     </Button>
                   </form>
                 </CardContent>
@@ -468,7 +551,7 @@ export default function SocietyOnboarding() {
                     Add users (Managers, Treasurers, Agents) to societies
                   </CardDescription>
                 </CardHeader>
-                
+
                 <CardContent>
                   <form onSubmit={handleUserSubmit} className="space-y-6">
                     {error && (
@@ -477,11 +560,13 @@ export default function SocietyOnboarding() {
                         <AlertDescription>{error}</AlertDescription>
                       </Alert>
                     )}
-                    
+
                     {success && (
                       <Alert>
                         <CheckCircle className="h-4 w-4" />
-                        <AlertDescription className="whitespace-pre-line">{success}</AlertDescription>
+                        <AlertDescription className="whitespace-pre-line">
+                          {success}
+                        </AlertDescription>
                       </Alert>
                     )}
 
@@ -492,11 +577,16 @@ export default function SocietyOnboarding() {
                           id="userName"
                           placeholder="e.g., John Smith"
                           value={userForm.name}
-                          onChange={(e) => setUserForm(prev => ({ ...prev, name: e.target.value }))}
+                          onChange={(e) =>
+                            setUserForm((prev) => ({
+                              ...prev,
+                              name: e.target.value,
+                            }))
+                          }
                           required
                         />
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="userEmail">Email Address *</Label>
                         <Input
@@ -504,7 +594,12 @@ export default function SocietyOnboarding() {
                           type="email"
                           placeholder="john@society.org"
                           value={userForm.email}
-                          onChange={(e) => setUserForm(prev => ({ ...prev, email: e.target.value }))}
+                          onChange={(e) =>
+                            setUserForm((prev) => ({
+                              ...prev,
+                              email: e.target.value,
+                            }))
+                          }
                           required
                         />
                       </div>
@@ -513,20 +608,37 @@ export default function SocietyOnboarding() {
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div className="space-y-2">
                         <Label htmlFor="userRole">Role *</Label>
-                        <Select value={userForm.role} onValueChange={(value) => setUserForm(prev => ({ ...prev, role: value }))}>
+                        <Select
+                          value={userForm.role}
+                          onValueChange={(value) =>
+                            setUserForm((prev) => ({ ...prev, role: value }))
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select role" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="society_user">Society User (Manager/Treasurer/Secretary)</SelectItem>
-                            <SelectItem value="agent">Processing Agent</SelectItem>
+                            <SelectItem value="society_user">
+                              Society User (Manager/Treasurer/Secretary)
+                            </SelectItem>
+                            <SelectItem value="agent">
+                              Processing Agent
+                            </SelectItem>
                           </SelectContent>
                         </Select>
                       </div>
-                      
+
                       <div className="space-y-2">
                         <Label htmlFor="userSociety">Society *</Label>
-                        <Select value={userForm.societyId} onValueChange={(value) => setUserForm(prev => ({ ...prev, societyId: value }))}>
+                        <Select
+                          value={userForm.societyId}
+                          onValueChange={(value) =>
+                            setUserForm((prev) => ({
+                              ...prev,
+                              societyId: value,
+                            }))
+                          }
+                        >
                           <SelectTrigger>
                             <SelectValue placeholder="Select society" />
                           </SelectTrigger>
@@ -548,27 +660,39 @@ export default function SocietyOnboarding() {
                           type="checkbox"
                           id="canWrite"
                           checked={userForm.canWrite}
-                          onChange={(e) => setUserForm(prev => ({ ...prev, canWrite: e.target.checked }))}
+                          onChange={(e) =>
+                            setUserForm((prev) => ({
+                              ...prev,
+                              canWrite: e.target.checked,
+                            }))
+                          }
                           className="rounded"
                         />
                         <Label htmlFor="canWrite" className="text-sm">
-                          Can create and edit transactions (recommended for Managers)
+                          Can create and edit transactions (recommended for
+                          Managers)
                         </Label>
                       </div>
                       <p className="text-xs text-muted-foreground">
-                        All users can read data by default. Agents always have write permissions for their assigned transactions.
+                        All users can read data by default. Agents always have
+                        write permissions for their assigned transactions.
                       </p>
                     </div>
 
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        A temporary password will be generated and shown to you. The user should change it on first login.
+                        A temporary password will be generated and shown to you.
+                        The user should change it on first login.
                       </AlertDescription>
                     </Alert>
 
-                    <Button type="submit" disabled={isSubmitting || !userForm.societyId} className="w-full">
-                      {isSubmitting ? 'Creating User...' : 'Create User'}
+                    <Button
+                      type="submit"
+                      disabled={isSubmitting || !userForm.societyId}
+                      className="w-full"
+                    >
+                      {isSubmitting ? "Creating User..." : "Create User"}
                     </Button>
                   </form>
                 </CardContent>

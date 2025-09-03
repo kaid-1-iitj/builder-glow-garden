@@ -1,6 +1,7 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
-const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/society-management';
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/society-management";
 
 export class DatabaseConnection {
   private static instance: DatabaseConnection;
@@ -15,7 +16,7 @@ export class DatabaseConnection {
 
   public async connect(): Promise<void> {
     if (this.isConnected) {
-      console.log('Already connected to MongoDB');
+      console.log("Already connected to MongoDB");
       return;
     }
 
@@ -27,27 +28,26 @@ export class DatabaseConnection {
       });
 
       this.isConnected = true;
-      console.log('Connected to MongoDB successfully');
+      console.log("Connected to MongoDB successfully");
 
       // Handle connection events
-      mongoose.connection.on('error', (error) => {
-        console.error('MongoDB connection error:', error);
+      mongoose.connection.on("error", (error) => {
+        console.error("MongoDB connection error:", error);
         this.isConnected = false;
       });
 
-      mongoose.connection.on('disconnected', () => {
-        console.log('MongoDB disconnected');
+      mongoose.connection.on("disconnected", () => {
+        console.log("MongoDB disconnected");
         this.isConnected = false;
       });
 
       // Graceful shutdown
-      process.on('SIGINT', async () => {
+      process.on("SIGINT", async () => {
         await this.disconnect();
         process.exit(0);
       });
-
     } catch (error) {
-      console.error('Failed to connect to MongoDB:', error);
+      console.error("Failed to connect to MongoDB:", error);
       this.isConnected = false;
       throw error;
     }
@@ -61,9 +61,9 @@ export class DatabaseConnection {
     try {
       await mongoose.disconnect();
       this.isConnected = false;
-      console.log('Disconnected from MongoDB');
+      console.log("Disconnected from MongoDB");
     } catch (error) {
-      console.error('Error disconnecting from MongoDB:', error);
+      console.error("Error disconnecting from MongoDB:", error);
     }
   }
 

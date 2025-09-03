@@ -4,36 +4,31 @@ import { Button } from "@/components/ui/button";
 import { TransactionList } from "@/components/TransactionList";
 import { CreateTransactionForm } from "@/components/CreateTransactionForm";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { 
-  Building2, 
-  LogOut,
-  ArrowLeft,
-  Plus
-} from "lucide-react";
+import { Building2, LogOut, ArrowLeft, Plus } from "lucide-react";
 
-type ViewMode = 'list' | 'create' | 'view';
+type ViewMode = "list" | "create" | "view";
 
 export default function Transactions() {
   const { user, logout } = useAuth();
-  const [viewMode, setViewMode] = useState<ViewMode>('list');
+  const [viewMode, setViewMode] = useState<ViewMode>("list");
   const [selectedTransaction, setSelectedTransaction] = useState(null);
 
   const handleCreateNew = () => {
-    setViewMode('create');
+    setViewMode("create");
   };
 
   const handleTransactionCreated = (transaction: any) => {
-    setViewMode('list');
+    setViewMode("list");
     // Could refresh the list here or show a success message
   };
 
   const handleViewTransaction = (transaction: any) => {
     setSelectedTransaction(transaction);
-    setViewMode('view');
+    setViewMode("view");
   };
 
   const handleBackToList = () => {
-    setViewMode('list');
+    setViewMode("list");
     setSelectedTransaction(null);
   };
 
@@ -52,15 +47,21 @@ export default function Transactions() {
             </div>
             <div>
               <h1 className="text-xl font-bold">SocietyHub</h1>
-              <p className="text-xs text-muted-foreground">Management Platform</p>
+              <p className="text-xs text-muted-foreground">
+                Management Platform
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <Avatar>
                 <AvatarFallback>
-                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden sm:block">
@@ -79,7 +80,7 @@ export default function Transactions() {
       {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {/* Navigation */}
-        {viewMode !== 'list' && (
+        {viewMode !== "list" && (
           <div className="mb-6">
             <Button variant="ghost" onClick={handleBackToList} className="mb-4">
               <ArrowLeft className="h-4 w-4 mr-2" />
@@ -89,21 +90,21 @@ export default function Transactions() {
         )}
 
         {/* Content based on view mode */}
-        {viewMode === 'list' && (
-          <TransactionList 
+        {viewMode === "list" && (
+          <TransactionList
             onViewTransaction={handleViewTransaction}
             onCreateNew={handleCreateNew}
           />
         )}
 
-        {viewMode === 'create' && (
-          <CreateTransactionForm 
+        {viewMode === "create" && (
+          <CreateTransactionForm
             onSuccess={handleTransactionCreated}
             onCancel={handleBackToList}
           />
         )}
 
-        {viewMode === 'view' && selectedTransaction && (
+        {viewMode === "view" && selectedTransaction && (
           <div className="space-y-6">
             <div className="text-center py-8">
               <h2 className="text-2xl font-bold mb-4">Transaction Details</h2>

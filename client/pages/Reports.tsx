@@ -2,11 +2,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import ReportsPage from "@/components/ReportsPage";
-import { 
-  Building2, 
-  LogOut,
-  ArrowLeft
-} from "lucide-react";
+import { Building2, LogOut, ArrowLeft } from "lucide-react";
 
 export default function Reports() {
   const { user, logout } = useAuth();
@@ -26,15 +22,21 @@ export default function Reports() {
             </div>
             <div>
               <h1 className="text-xl font-bold">SocietyHub</h1>
-              <p className="text-xs text-muted-foreground">Reports & Analytics</p>
+              <p className="text-xs text-muted-foreground">
+                Reports & Analytics
+              </p>
             </div>
           </div>
-          
+
           <div className="flex items-center space-x-4">
             <div className="flex items-center space-x-3">
               <Avatar>
                 <AvatarFallback>
-                  {user.name.split(' ').map(n => n[0]).join('').toUpperCase()}
+                  {user.name
+                    .split(" ")
+                    .map((n) => n[0])
+                    .join("")
+                    .toUpperCase()}
                 </AvatarFallback>
               </Avatar>
               <div className="hidden sm:block">
@@ -54,7 +56,11 @@ export default function Reports() {
       <main className="container mx-auto px-4 py-8">
         {/* Navigation */}
         <div className="mb-6">
-          <Button variant="ghost" onClick={() => window.location.href = '/dashboard'} className="mb-4">
+          <Button
+            variant="ghost"
+            onClick={() => (window.location.href = "/dashboard")}
+            className="mb-4"
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Dashboard
           </Button>

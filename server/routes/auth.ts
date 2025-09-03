@@ -1,16 +1,16 @@
-import { RequestHandler } from 'express';
-import User from '../models/User';
-import Society from '../models/Society';
-import AuthUtils, { AuthenticatedRequest } from '../utils/auth';
-import mongoose from 'mongoose';
-import MockDataService from '../services/mockData';
+import { RequestHandler } from "express";
+import User from "../models/User";
+import Society from "../models/Society";
+import AuthUtils, { AuthenticatedRequest } from "../utils/auth";
+import mongoose from "mongoose";
+import MockDataService from "../services/mockData";
 
 export const login: RequestHandler = async (req, res) => {
   try {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' });
+      return res.status(400).json({ error: "Email and password are required" });
     }
 
     // Check if MongoDB is available
@@ -19,20 +19,23 @@ export const login: RequestHandler = async (req, res) => {
 
     if (isMongoConnected) {
       // Use MongoDB
-      user = await User.findOne({ email }).populate('societyId');
+      user = await User.findOne({ email }).populate("societyId");
     } else {
       // Use mock data service
       user = await MockDataService.findUserByEmail(email);
     }
 
     if (!user) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     // Check password
-    const isValidPassword = await AuthUtils.comparePassword(password, user.password);
+    const isValidPassword = await AuthUtils.comparePassword(
+      password,
+      user.password,
+    );
     if (!isValidPassword) {
-      return res.status(401).json({ error: 'Invalid credentials' });
+      return res.status(401).json({ error: "Invalid credentials" });
     }
 
     // Generate JWT token
@@ -40,7 +43,7 @@ export const login: RequestHandler = async (req, res) => {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
-      societyId: user.societyId?._id?.toString() || user.societyId?.toString()
+      societyId: user.societyId?._id?.toString() || user.societyId?.toString(),
     });
 
     // Update last login
@@ -60,17 +63,17 @@ export const login: RequestHandler = async (req, res) => {
       societyId: user.societyId,
       permissions: user.permissions,
       isEmailVerified: user.isEmailVerified,
-      lastLogin: user.lastLogin || new Date()
+      lastLogin: user.lastLogin || new Date(),
     };
 
     res.json({
-      message: 'Login successful',
+      message: "Login successful",
       token,
-      user: userResponse
+      user: userResponse,
     });
   } catch (error) {
-    console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Login error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
@@ -80,24 +83,30 @@ export const register: RequestHandler = async (req, res) => {
 
     // Validation
     if (!name || !email || !password || !role) {
-      return res.status(400).json({ error: 'Name, email, password, and role are required' });
+      return res
+        .status(400)
+        .json({ error: "Name, email, password, and role are required" });
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ error: 'Password must be at least 6 characters long' });
+      return res
+        .status(400)
+        .json({ error: "Password must be at least 6 characters long" });
     }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(409).json({ error: 'User with this email already exists' });
+      return res
+        .status(409)
+        .json({ error: "User with this email already exists" });
     }
 
     // Validate society for non-admin users
-    if (role !== 'admin' && societyId) {
+    if (role !== "admin" && societyId) {
       const society = await Society.findById(societyId);
       if (!society) {
-        return res.status(400).json({ error: 'Invalid society ID' });
+        return res.status(400).json({ error: "Invalid society ID" });
       }
     }
 
@@ -110,8 +119,8 @@ export const register: RequestHandler = async (req, res) => {
       email,
       password: hashedPassword,
       role,
-      societyId: role !== 'admin' ? societyId : undefined,
-      permissions: permissions || { canRead: true, canWrite: false }
+      societyId: role !== "admin" ? societyId : undefined,
+      permissions: permissions || { canRead: true, canWrite: false },
     });
 
     await user.save();
@@ -121,7 +130,7 @@ export const register: RequestHandler = async (req, res) => {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
-      societyId: user.societyId?.toString()
+      societyId: user.societyId?.toString(),
     });
 
     // Send response (exclude password)
@@ -132,24 +141,27 @@ export const register: RequestHandler = async (req, res) => {
       role: user.role,
       societyId: user.societyId,
       permissions: user.permissions,
-      isEmailVerified: user.isEmailVerified
+      isEmailVerified: user.isEmailVerified,
     };
 
     res.status(201).json({
-      message: 'User registered successfully',
+      message: "User registered successfully",
       token,
-      user: userResponse
+      user: userResponse,
     });
   } catch (error) {
-    console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Registration error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-export const getProfile: RequestHandler = async (req: AuthenticatedRequest, res) => {
+export const getProfile: RequestHandler = async (
+  req: AuthenticatedRequest,
+  res,
+) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ error: 'Not authenticated' });
+      return res.status(401).json({ error: "Not authenticated" });
     }
 
     const isMongoConnected = mongoose.connection.readyState === 1;
@@ -157,8 +169,8 @@ export const getProfile: RequestHandler = async (req: AuthenticatedRequest, res)
 
     if (isMongoConnected) {
       user = await User.findById(req.user._id)
-        .populate('societyId')
-        .select('-password');
+        .populate("societyId")
+        .select("-password");
     } else {
       user = await MockDataService.findUserById(req.user._id.toString());
       if (user) {
@@ -170,15 +182,18 @@ export const getProfile: RequestHandler = async (req: AuthenticatedRequest, res)
 
     res.json({ user });
   } catch (error) {
-    console.error('Get profile error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Get profile error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-export const updateProfile: RequestHandler = async (req: AuthenticatedRequest, res) => {
+export const updateProfile: RequestHandler = async (
+  req: AuthenticatedRequest,
+  res,
+) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ error: 'Not authenticated' });
+      return res.status(401).json({ error: "Not authenticated" });
     }
 
     const { name, email } = req.body;
@@ -187,57 +202,68 @@ export const updateProfile: RequestHandler = async (req: AuthenticatedRequest, r
     if (name) updates.name = name;
     if (email) {
       // Check if email is already taken by another user
-      const existingUser = await User.findOne({ 
-        email, 
-        _id: { $ne: req.user._id } 
+      const existingUser = await User.findOne({
+        email,
+        _id: { $ne: req.user._id },
       });
       if (existingUser) {
-        return res.status(409).json({ error: 'Email already in use' });
+        return res.status(409).json({ error: "Email already in use" });
       }
       updates.email = email;
     }
 
-    const user = await User.findByIdAndUpdate(
-      req.user._id,
-      updates,
-      { new: true, runValidators: true }
-    ).populate('societyId').select('-password');
+    const user = await User.findByIdAndUpdate(req.user._id, updates, {
+      new: true,
+      runValidators: true,
+    })
+      .populate("societyId")
+      .select("-password");
 
     res.json({
-      message: 'Profile updated successfully',
-      user
+      message: "Profile updated successfully",
+      user,
     });
   } catch (error) {
-    console.error('Update profile error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Update profile error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };
 
-export const changePassword: RequestHandler = async (req: AuthenticatedRequest, res) => {
+export const changePassword: RequestHandler = async (
+  req: AuthenticatedRequest,
+  res,
+) => {
   try {
     if (!req.user) {
-      return res.status(401).json({ error: 'Not authenticated' });
+      return res.status(401).json({ error: "Not authenticated" });
     }
 
     const { currentPassword, newPassword } = req.body;
 
     if (!currentPassword || !newPassword) {
-      return res.status(400).json({ error: 'Current password and new password are required' });
+      return res
+        .status(400)
+        .json({ error: "Current password and new password are required" });
     }
 
     if (newPassword.length < 6) {
-      return res.status(400).json({ error: 'New password must be at least 6 characters long' });
+      return res
+        .status(400)
+        .json({ error: "New password must be at least 6 characters long" });
     }
 
     // Verify current password
     const user = await User.findById(req.user._id);
     if (!user) {
-      return res.status(404).json({ error: 'User not found' });
+      return res.status(404).json({ error: "User not found" });
     }
 
-    const isValidPassword = await AuthUtils.comparePassword(currentPassword, user.password);
+    const isValidPassword = await AuthUtils.comparePassword(
+      currentPassword,
+      user.password,
+    );
     if (!isValidPassword) {
-      return res.status(401).json({ error: 'Current password is incorrect' });
+      return res.status(401).json({ error: "Current password is incorrect" });
     }
 
     // Hash new password and update
@@ -245,9 +271,9 @@ export const changePassword: RequestHandler = async (req: AuthenticatedRequest, 
     user.password = hashedNewPassword;
     await user.save();
 
-    res.json({ message: 'Password changed successfully' });
+    res.json({ message: "Password changed successfully" });
   } catch (error) {
-    console.error('Change password error:', error);
-    res.status(500).json({ error: 'Internal server error' });
+    console.error("Change password error:", error);
+    res.status(500).json({ error: "Internal server error" });
   }
 };

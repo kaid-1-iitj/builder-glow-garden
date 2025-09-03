@@ -27,7 +27,7 @@ export interface RegisterRequest {
   name: string;
   email: string;
   password: string;
-  role: 'admin' | 'society_user' | 'agent';
+  role: "admin" | "society_user" | "agent";
   societyId?: string;
   permissions?: {
     canRead: boolean;
@@ -46,7 +46,7 @@ export interface User {
   id: string;
   name: string;
   email: string;
-  role: 'admin' | 'society_user' | 'agent';
+  role: "admin" | "society_user" | "agent";
   societyId?: Society;
   permissions: {
     canRead: boolean;
@@ -75,7 +75,7 @@ export interface Society {
     email?: string;
     website?: string;
   };
-  status: 'active' | 'inactive' | 'suspended';
+  status: "active" | "inactive" | "suspended";
   createdBy: string;
   createdAt: string;
   updatedAt: string;
@@ -87,12 +87,16 @@ export interface Transaction {
   vendorName: string;
   nature: string;
   amount?: number;
-  status: 'pending_on_society' | 'pending_on_agent' | 'pending_for_clarification' | 'completed';
+  status:
+    | "pending_on_society"
+    | "pending_on_agent"
+    | "pending_for_clarification"
+    | "completed";
   remarks: Array<{
     text: string;
     author: string;
     timestamp: string;
-    type: 'info' | 'clarification' | 'approval' | 'rejection';
+    type: "info" | "clarification" | "approval" | "rejection";
   }>;
   attachments: Array<{
     fileName: string;

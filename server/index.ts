@@ -15,8 +15,8 @@ export function createServer() {
 
   // Middleware
   app.use(cors());
-  app.use(express.json({ limit: '10mb' }));
-  app.use(express.urlencoded({ extended: true, limit: '10mb' }));
+  app.use(express.json({ limit: "10mb" }));
+  app.use(express.urlencoded({ extended: true, limit: "10mb" }));
 
   // Health check routes
   app.get("/api/ping", (_req, res) => {
@@ -26,37 +26,101 @@ export function createServer() {
 
   app.get("/api/health", (_req, res) => {
     res.json({
-      status: 'ok',
+      status: "ok",
       timestamp: new Date().toISOString(),
-      database: db.getConnectionStatus() ? 'connected' : 'disconnected'
+      database: db.getConnectionStatus() ? "connected" : "disconnected",
     });
   });
 
   // Authentication routes
   app.post("/api/auth/login", authRoutes.login);
   app.post("/api/auth/register", authRoutes.register);
-  app.get("/api/auth/profile", AuthUtils.authenticateToken, authRoutes.getProfile);
-  app.put("/api/auth/profile", AuthUtils.authenticateToken, authRoutes.updateProfile);
-  app.post("/api/auth/change-password", AuthUtils.authenticateToken, authRoutes.changePassword);
+  app.get(
+    "/api/auth/profile",
+    AuthUtils.authenticateToken,
+    authRoutes.getProfile,
+  );
+  app.put(
+    "/api/auth/profile",
+    AuthUtils.authenticateToken,
+    authRoutes.updateProfile,
+  );
+  app.post(
+    "/api/auth/change-password",
+    AuthUtils.authenticateToken,
+    authRoutes.changePassword,
+  );
 
   // Transaction routes
   const transactionRoutes = await import("./routes/transactions");
-  app.get("/api/transactions", AuthUtils.authenticateToken, transactionRoutes.getTransactions);
-  app.get("/api/transactions/:id", AuthUtils.authenticateToken, transactionRoutes.getTransactionById);
-  app.post("/api/transactions", AuthUtils.authenticateToken, transactionRoutes.createTransaction);
-  app.patch("/api/transactions/:id/status", AuthUtils.authenticateToken, transactionRoutes.updateTransactionStatus);
-  app.patch("/api/transactions/:id/assign", AuthUtils.authenticateToken, transactionRoutes.assignTransactionToAgent);
-  app.get("/api/dashboard/stats", AuthUtils.authenticateToken, transactionRoutes.getDashboardStats);
+  app.get(
+    "/api/transactions",
+    AuthUtils.authenticateToken,
+    transactionRoutes.getTransactions,
+  );
+  app.get(
+    "/api/transactions/:id",
+    AuthUtils.authenticateToken,
+    transactionRoutes.getTransactionById,
+  );
+  app.post(
+    "/api/transactions",
+    AuthUtils.authenticateToken,
+    transactionRoutes.createTransaction,
+  );
+  app.patch(
+    "/api/transactions/:id/status",
+    AuthUtils.authenticateToken,
+    transactionRoutes.updateTransactionStatus,
+  );
+  app.patch(
+    "/api/transactions/:id/assign",
+    AuthUtils.authenticateToken,
+    transactionRoutes.assignTransactionToAgent,
+  );
+  app.get(
+    "/api/dashboard/stats",
+    AuthUtils.authenticateToken,
+    transactionRoutes.getDashboardStats,
+  );
 
   // Society routes
   const societyRoutes = await import("./routes/societies");
-  app.get("/api/societies", AuthUtils.authenticateToken, societyRoutes.getAllSocieties);
-  app.get("/api/societies/:id", AuthUtils.authenticateToken, societyRoutes.getSocietyById);
-  app.post("/api/societies", AuthUtils.authenticateToken, societyRoutes.createSociety);
-  app.put("/api/societies/:id", AuthUtils.authenticateToken, societyRoutes.updateSociety);
-  app.post("/api/societies/users", AuthUtils.authenticateToken, societyRoutes.createSocietyUser);
-  app.get("/api/societies/:societyId/users", AuthUtils.authenticateToken, societyRoutes.getSocietyUsers);
-  app.patch("/api/users/:userId/permissions", AuthUtils.authenticateToken, societyRoutes.updateUserPermissions);
+  app.get(
+    "/api/societies",
+    AuthUtils.authenticateToken,
+    societyRoutes.getAllSocieties,
+  );
+  app.get(
+    "/api/societies/:id",
+    AuthUtils.authenticateToken,
+    societyRoutes.getSocietyById,
+  );
+  app.post(
+    "/api/societies",
+    AuthUtils.authenticateToken,
+    societyRoutes.createSociety,
+  );
+  app.put(
+    "/api/societies/:id",
+    AuthUtils.authenticateToken,
+    societyRoutes.updateSociety,
+  );
+  app.post(
+    "/api/societies/users",
+    AuthUtils.authenticateToken,
+    societyRoutes.createSocietyUser,
+  );
+  app.get(
+    "/api/societies/:societyId/users",
+    AuthUtils.authenticateToken,
+    societyRoutes.getSocietyUsers,
+  );
+  app.patch(
+    "/api/users/:userId/permissions",
+    AuthUtils.authenticateToken,
+    societyRoutes.updateUserPermissions,
+  );
 
   // Legacy demo route
   app.get("/api/demo", handleDemo);
