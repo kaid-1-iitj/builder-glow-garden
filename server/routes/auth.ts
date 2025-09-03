@@ -13,8 +13,18 @@ export const login: RequestHandler = async (req, res) => {
       return res.status(400).json({ error: 'Email and password are required' });
     }
 
-    // Find user by email
-    const user = await User.findOne({ email }).populate('societyId');
+    // Check if MongoDB is available
+    const isMongoConnected = mongoose.connection.readyState === 1;
+    let user;
+
+    if (isMongoConnected) {
+      // Use MongoDB
+      user = await User.findOne({ email }).populate('societyId');
+    } else {
+      // Use mock data service
+      user = await MockDataService.findUserByEmail(email);
+    }
+
     if (!user) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
@@ -30,12 +40,16 @@ export const login: RequestHandler = async (req, res) => {
       userId: user._id.toString(),
       email: user.email,
       role: user.role,
-      societyId: user.societyId?.toString()
+      societyId: user.societyId?._id?.toString() || user.societyId?.toString()
     });
 
     // Update last login
-    user.lastLogin = new Date();
-    await user.save();
+    if (isMongoConnected) {
+      user.lastLogin = new Date();
+      await user.save();
+    } else {
+      await MockDataService.updateUser(user._id, { lastLogin: new Date() });
+    }
 
     // Send response (exclude password)
     const userResponse = {
@@ -46,7 +60,7 @@ export const login: RequestHandler = async (req, res) => {
       societyId: user.societyId,
       permissions: user.permissions,
       isEmailVerified: user.isEmailVerified,
-      lastLogin: user.lastLogin
+      lastLogin: user.lastLogin || new Date()
     };
 
     res.json({
