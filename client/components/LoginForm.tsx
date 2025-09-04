@@ -87,10 +87,22 @@ export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
           </Button>
         </form>
         <div className="mt-4 text-center text-sm text-muted-foreground">
-          Forgot your password?{" "}
-          <button className="text-primary hover:underline">
-            Reset it here
-          </button>
+          <div>
+            Forgot your password?{" "}
+            <button className="text-primary hover:underline">
+              Reset it here
+            </button>
+          </div>
+          <div className="mt-2">
+            Don't have an account?{" "}
+            <button
+              type="button"
+              onClick={onSwitchToRegister}
+              className="text-primary hover:underline"
+            >
+              Create one here
+            </button>
+          </div>
         </div>
       </CardContent>
     </Card>
