@@ -67,7 +67,7 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
   };
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   return (
@@ -118,8 +118,8 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
             <Label htmlFor="role">Role</Label>
             <div className="relative">
               <UserCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4 z-10" />
-              <Select 
-                value={formData.role} 
+              <Select
+                value={formData.role}
                 onValueChange={(value) => handleInputChange("role", value)}
               >
                 <SelectTrigger className="pl-10">
@@ -159,7 +159,9 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
                 type="password"
                 placeholder="Confirm your password"
                 value={formData.confirmPassword}
-                onChange={(e) => handleInputChange("confirmPassword", e.target.value)}
+                onChange={(e) =>
+                  handleInputChange("confirmPassword", e.target.value)
+                }
                 className="pl-10"
                 required
               />
@@ -180,7 +182,7 @@ export function RegisterForm({ onSwitchToLogin }: RegisterFormProps) {
 
         <div className="mt-4 text-center text-sm text-muted-foreground">
           Already have an account?{" "}
-          <button 
+          <button
             type="button"
             onClick={onSwitchToLogin}
             className="text-primary hover:underline"
