@@ -13,7 +13,11 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Mail, Lock, AlertCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 
-export function LoginForm() {
+interface LoginFormProps {
+  onSwitchToRegister: () => void;
+}
+
+export function LoginForm({ onSwitchToRegister }: LoginFormProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
