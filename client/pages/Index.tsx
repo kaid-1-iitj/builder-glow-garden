@@ -158,7 +158,7 @@ export default function Index() {
           </div>
 
           <div className="lg:pl-8">
-            <LoginForm />
+            <AuthForms />
           </div>
         </div>
       </section>
