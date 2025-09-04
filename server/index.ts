@@ -5,6 +5,8 @@ import { handleDemo } from "./routes/demo";
 import * as authRoutes from "./routes/auth";
 import AuthUtils from "./utils/auth";
 import DatabaseConnection from "./utils/database";
+import * as transactionRoutes from "./routes/transactions";
+import * as societyRoutes from "./routes/societies";
 
 export function createServer() {
   const app = express();
@@ -52,7 +54,6 @@ export function createServer() {
   );
 
   // Transaction routes
-  const transactionRoutes = await import("./routes/transactions");
   app.get(
     "/api/transactions",
     AuthUtils.authenticateToken,
@@ -85,7 +86,6 @@ export function createServer() {
   );
 
   // Society routes
-  const societyRoutes = await import("./routes/societies");
   app.get(
     "/api/societies",
     AuthUtils.authenticateToken,
